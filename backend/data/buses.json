@@ -1,0 +1,18 @@
+{
+  "buses": [
+    {
+      "id": 1,
+      "plate": "ABC-123",
+      "model": "Volvo 7700",
+      "status": "operational",
+      "capacity": 72
+    },
+    {
+      "id": 2,
+      "plate": "XYZ-442",
+      "model": "Mercedes Citaro",
+      "status": "maintenance",
+      "capacity": 80
+    }
+  ]
+}
