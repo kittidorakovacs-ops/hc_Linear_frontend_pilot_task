@@ -1,48 +1,50 @@
 /* ---- GLOBAL ---- */
 
 body, html {
-  margin: 0;
-  padding: 0;
-  background: #062f41;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: var(--text-color-light);
+    margin: 0;
+    padding: 0;
+    background: #062f41;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 :root {
-  --primary-color: #1BE29A;
-  --primary-color-hover: #17c586;
-  --secondary-color: #232323;
-  --secondary-color-hover: #4a4a4a;
+    --primary-color: #1BE29A;
+    --primary-color-hover: #17c586;
+    --secondary-color: #232323;
 
-  --main-color: #0D465F;
-  --main-color-50: rgba(13, 70, 95, 0.5);
-  --main-color-30: rgba(13, 70, 95, 0.3);
+    --secondary-color-hover: #4a4a4a;
 
-  --text-color-light: #ffffff;
-  --text-color-dark: #0D465F;
-  --text-color-lighter: #487386;
+    --main-color: #0D465F;
+    --main-color-50: rgba(13, 70, 95, 0.5);
+    --main-color-30: rgba(13, 70, 95, 0.3);
 
-  --border-color: #E3E9ED;
-  --background-color-light: #f3f3f3;
-  --background-color-dark: var(--main-color);
+    --text-color-light: #ffffff;
+    --text-color-dark: #0D465F;
+    --text-color-lighter: #487386;
 
-  --button-background-color: var(--main-color);
-  --button-background-color-hover: var(--primary-color);
-  --button-background-color-grey: #DAE4E8;
-  --button-border-radius: 8px;
-  --input-border-radius: 15px;
+    --border-color: #E3E9ED;
+    --background-color-light: #f3f3f3;
+    --background-color-dark: var(--main-color);
 
-  --icon-button-color: #F8FAFB;
-  --icon-button-color-hover: #f0f0f0;
+    --button-background-color: #0D465F;
+    --button-background-color-hover: #1BE29A;
+    --button-background-color-grey: #DAE4E8;
+    --button-border-radius: 8px;
+    --input-border-radius: 15px;
 
-  --cancel-delete-button-color: #E5342B;
+    --icon-button-color: #F8FAFB;
+    --icon-button-color-hover: #f0f0f0;
 
-  --button-background-color-disabled: #F5F7F9;
-  --disabled-color: #b7c8cf;
+    --cancel-delete-button-color: #E5342B;
 
-  --scrollbar-color: #234559;
-  --scrollbar-color-hover: #2d4d5c;
+    --button-background-color-disabled: #F5F7F9;
+    --disabled-color: #b7c8cf;
+
+    --scrollbar-color: #234559;
+    --scrollbar-color-hover: #2d4d5c;
 }
+
+
 
 
 .hcl-btn {

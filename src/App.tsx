@@ -24,6 +24,7 @@ import { APP_ROUTES } from "./config/routes";
 import { BusList } from "./page/bus/BusList";
 import { BusDetail } from "./page/bus/BusDetail";
 import { BusEdit } from "./page/bus/BusEdit";
+import BoardPage from "./page/board/BoardPage"; 
 
 export default function App() {
   return (
@@ -43,6 +44,8 @@ export default function App() {
 
             {/* Busz szerkesztő*/}
           <Route path={APP_ROUTES.BUS_EDIT} element={<BusEdit />} />
+
+           <Route path={APP_ROUTES.BOARD} element={<BoardPage />} />
         </Routes>
       </main>
     </BrowserRouter>

@@ -9,4 +9,8 @@ export const menuItems = [
         label: "Bus CRUD",
         path: APP_ROUTES.BUS_CRUD,
     },
+    {
+    label: "Board",         
+    path: APP_ROUTES.BOARD, 
+     },
 ];

@@ -1,9 +1,3 @@
-/* export const APP_ROUTES = {
-    TASK: "/",
-    BUS_CRUD: "/buses",
-}
- */
-
 // src/config/routes.ts
 export const APP_ROUTES = {
   TASK: "/",
@@ -13,12 +7,9 @@ export const APP_ROUTES = {
   BUS_DETAIL: "/buses/:id",
   BUS_EDIT: "/buses/:id/edit",
 
-  // trello - routes
-
-  
+  // board (trello) - routes
+  BOARD: "/board",
 };
 
 export const getBusDetailRoute = (id: string | number) => `/buses/${id}`;
 export const getBusEditRoute = (id: string | number) => `/buses/${id}/edit`;
-
-
