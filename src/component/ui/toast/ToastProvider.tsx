@@ -69,11 +69,23 @@ export function ToastProvider({ children }: ToastProviderProps) {
             onClose={handleClose}
             severity={severity}
             variant="filled"
-            sx={{ width: "100%" }}
+            sx={{
+              width: "100%",
+              bgcolor:
+                severity === "success"
+                  ? "rgba(27, 226, 154, 0.15)"
+                  : severity === "error"
+                  ? "rgba(229, 52, 43, 0.15)"
+                  : "rgba(6, 47, 65, 0.9)",
+              color: "#ffffff",
+              border: "1px solid rgba(255,255,255,0.2)",
+              backdropFilter: "blur(6px)",
+            }}
           >
             {toast.message}
           </Alert>
         </Snackbar>
+
       )}
     </ToastContext.Provider>
   );

@@ -1,118 +1,129 @@
+/* ==========================================================================
+   GLOBAL MODAL OVERLAY
+   ========================================================================== */
 
 .app-modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(6, 24, 36, 0.7);
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 500;
 }
 
+/* ==========================================================================
+   MODAL CONTAINER
+   ========================================================================== */
 
 .app-modal {
-  width: 100%;
-  max-width: 560px;
-  background: linear-gradient(145deg, var(--main-color), #062f41 60%);
-  border-radius: 16px;
-  padding: 24px 28px 24px;
+  width: min(440px, 92vw);
+  padding: 22px 26px;
   box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+  border-radius: 1px;
+  background: rgba(13, 70, 95, 0.20); 
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.55),
+    0 3px 12px rgba(0, 0, 0, 0.35);
+
+  color: var(--text-color-light);
+  animation: modalFadeIn 0.25s ease;
 }
 
-
-@media (max-width: 600px) {
-  .app-modal {
-    max-width: 95vw;
-    padding: 20px 18px;
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
 .app-modal-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 12px;
 }
 
 .app-modal-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-color-light);
   margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-color-light);
 }
 
+/* ==========================================================================
+   CLOSE BUTTON (X)
+   ========================================================================== */
 
 .app-modal-close {
   border: none;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-color-light);
   border-radius: 999px;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.1s ease;
-}
-
-.app-modal-close:hover {
-  background: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
-}
-
-
-.app-modal-body {
-  margin-top: 4px;
-}
-
-.app-modal-body .modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Modal CTA – letisztult, elegáns zöld gomb */
-.modal-create-btn {
-  background: rgba(27, 226, 154, 0.15);
-  color: var(--primary-color);
-  padding: 10px 18px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: var(--button-border-radius);
-  border: 1px solid rgba(27, 226, 154, 0.35);
-  width: 80%;
-  text-align: center;
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   cursor: pointer;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-color-light);
+
   transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.1s ease;
+    background-color 0.15s ease,
+    transform 0.08s ease,
+    box-shadow 0.15s ease;
 }
 
-.modal-create-btn:hover:not(:disabled) {
-  background: rgba(27, 226, 154, 0.25);
-  box-shadow: 0 0 14px rgba(27, 226, 154, 0.35);
+.app-modal-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
   transform: translateY(-1px);
 }
 
-.modal-create-btn:disabled {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
-  color: var(--text-color-lighter);
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
+/* ==========================================================================
+   BODY
+   ========================================================================== */
+
+.app-modal-body {
+  font-size: 0.93rem;
+  color: var(--text-color-light);
+}
+
+/* Ha listák vagy paragrafusok vannak benne, legyen kicsi térköz */
+.app-modal-body p {
+  margin: 0 0 10px 0;
+}
+
+.app-modal-body:last-child p:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .app-modal {
+    padding: 16px 16px 18px;
+    border-radius: 1px;
+    max-width: 360px;
+  }
+
+  .app-modal-title {
+    font-size: 1rem;
+  }
 }
