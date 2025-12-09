@@ -5,6 +5,7 @@ import {
   useBoardTasksQuery,
   useDeleteBoardTaskMutation,
   useUpdateTaskStatusMutation,
+  useUpdateBoardTaskMutation,    // ⬅ ÚJ
 } from "./board.hooks";
 import { BOARD_COLUMNS } from "./data/board.data";
 import type { BoardTask, TaskStatus } from "./board.types";
@@ -34,6 +35,7 @@ const BoardPage: React.FC = () => {
 
   const { data: tasks, isLoading, isError } = useBoardTasksQuery();
   const updateStatusMutation = useUpdateTaskStatusMutation();
+  const updateTaskMutation = useUpdateBoardTaskMutation();   // ⬅ ÚJ
   const deleteTaskMutation = useDeleteBoardTaskMutation();
 
   const [draggedTaskId, setDraggedTaskId] = useState<number | null>(null);
@@ -60,12 +62,10 @@ const BoardPage: React.FC = () => {
     return map;
   }, [tasks]);
 
-
   const handleTaskDeleteRequest = (taskId: number) => {
     const task = tasks?.find((t) => t.id === taskId) ?? null;
     setTaskToDelete(task);
   };
-
 
   const handleConfirmDelete = () => {
     if (!taskToDelete) return;
@@ -120,6 +120,30 @@ const BoardPage: React.FC = () => {
     setStatusModalTask(task);
   };
 
+
+  const handleTaskTitleEdit = (taskId: number, newTitle: string) => {
+    const trimmed = newTitle.trim();
+    if (!trimmed) return;
+
+    updateTaskMutation.mutate(
+      { id: taskId, data: { title: trimmed } },
+      {
+        onSuccess: () => {
+          showToast({
+            message: "Feladat címe frissítve.",
+            variant: "success",
+          });
+        },
+        onError: () => {
+          showToast({
+            message: "Nem sikerült frissíteni a címet.",
+            variant: "error",
+          });
+        },
+      }
+    );
+  };
+
   return (
     <Page>
       <Header>
@@ -159,6 +183,7 @@ const BoardPage: React.FC = () => {
                 onTaskDragStart={setDraggedTaskId}
                 onTaskDragEnd={() => setDraggedTaskId(null)}
                 onTaskClick={handleTaskClick}
+                onTaskEdit={handleTaskTitleEdit}   // ⬅ ÚJ PROP
               />
             ))}
           </ColumnsWrapper>

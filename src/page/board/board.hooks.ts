@@ -1,3 +1,4 @@
+// src/page/board/board.hooks.ts
 import {
   useMutation,
   useQuery,
@@ -41,6 +42,24 @@ export const useUpdateTaskStatusMutation = () => {
       id: number;
       status: TaskStatus;
     }) => updateBoardTask(id, { status }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: BOARD_QUERY_KEY });
+    },
+  });
+};
+
+// ⬇⬇⬇ ÚJ: általános update (title / description / status)
+export const useUpdateBoardTaskMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: Partial<Pick<BoardTask, "title" | "description" | "status">>;
+    }) => updateBoardTask(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: BOARD_QUERY_KEY });
     },

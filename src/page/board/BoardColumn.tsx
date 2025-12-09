@@ -11,7 +11,7 @@ import {
 } from "./style/board.style";
 import { TaskCard } from "./TaskCard";
 import { TaskCreateForm } from "./TaskCreateForm";
-
+import { BoardAddButton } from "./style/boardButtons.style";
 
 type BoardColumnProps = {
   status: TaskStatus;
@@ -26,6 +26,7 @@ type BoardColumnProps = {
   onTaskDragStart: (taskId: number) => void;
   onTaskDragEnd: () => void;
   onTaskClick: (task: BoardTask) => void;
+  onTaskEdit: (taskId: number, newTitle: string) => void; // ⬅️ ÚJ
 };
 
 export const BoardColumn: React.FC<BoardColumnProps> = ({
@@ -41,6 +42,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
   onTaskDragStart,
   onTaskDragEnd,
   onTaskClick,
+  onTaskEdit,
 }) => {
   const [isAdding, setIsAdding] = useState(false);
 
@@ -71,6 +73,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             key={task.id}
             task={task}
             onDelete={() => onTaskDelete(task.id)}
+            onEdit={(newTitle) => onTaskEdit(task.id, newTitle)} // ⬅️ EDIT TITLE
             onDragStart={() => onTaskDragStart(task.id)}
             onDragEnd={onTaskDragEnd}
             onClick={() => onTaskClick(task)}
@@ -81,13 +84,12 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
 
       <ColumnFooter>
         {!isAdding && (
-          <button
+          <BoardAddButton
             type="button"
-            className="hcl-btn-primary-sm"
             onClick={() => setIsAdding(true)}
           >
             + Új feladat
-          </button>
+          </BoardAddButton>
         )}
 
         {isAdding && (
@@ -100,3 +102,5 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
     </Column>
   );
 };
+
+export default BoardColumn;

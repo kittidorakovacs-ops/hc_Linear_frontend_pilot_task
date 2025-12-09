@@ -2,7 +2,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useCreateBoardTaskMutation } from "./board.hooks";
 import type { TaskStatus } from "./board.types";
-import { useToast } from "../../component/ui/toast/ToastProvider"; 
+import { useToast } from "../../component/ui/toast/ToastProvider";
+
+import {
+  BoardAddButton,
+  BoardCancelButton,
+} from "./style/boardButtons.style";
 
 type TaskCreateFormProps = {
   defaultStatus: TaskStatus;
@@ -16,7 +21,6 @@ export const TaskCreateForm: React.FC<TaskCreateFormProps> = ({
   const [title, setTitle] = useState("");
   const createTaskMutation = useCreateBoardTaskMutation();
   const { showToast } = useToast();
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -25,6 +29,7 @@ export const TaskCreateForm: React.FC<TaskCreateFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     const trimmed = title.trim();
     if (!trimmed) return;
 
@@ -47,9 +52,7 @@ export const TaskCreateForm: React.FC<TaskCreateFormProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      onClose();
-    }
+    if (e.key === "Escape") onClose();
   };
 
   const isDisabled = createTaskMutation.isPending || !title.trim();
@@ -60,10 +63,12 @@ export const TaskCreateForm: React.FC<TaskCreateFormProps> = ({
       onKeyDown={handleKeyDown}
       style={{
         display: "flex",
+        flexDirection: "column",   
         gap: 8,
         marginTop: 8,
       }}
     >
+      {/* INPUT */}
       <input
         ref={inputRef}
         type="text"
@@ -71,31 +76,19 @@ export const TaskCreateForm: React.FC<TaskCreateFormProps> = ({
         placeholder="Új feladat..."
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        style={{ flex: 1, fontSize: "0.85rem" }}
+        style={{ fontSize: "0.85rem" }}
       />
 
-      <button
-        type="submit"
-        className="hcl-btn"
-        disabled={isDisabled}
-        style={{ padding: "6px 10px", fontSize: "0.8rem" }}
-      >
-        Hozzáadás
-      </button>
+      {/* GOMBOK – egy külön sorban */}
+      <div style={{ display: "flex", gap: 8 }}>
+        <BoardAddButton type="submit" disabled={isDisabled}>
+          Hozzáadás
+        </BoardAddButton>
 
-      <button
-        type="button"
-        className="hcl-btn"
-        onClick={onClose}
-        style={{
-          padding: "6px 10px",
-          fontSize: "0.8rem",
-          background: "var(--button-background-color-grey)",
-          color: "var(--text-color-dark)",
-        }}
-      >
-        Mégse
-      </button>
+        <BoardCancelButton type="button" onClick={onClose}>
+          Mégse
+        </BoardCancelButton>
+      </div>
     </form>
   );
 };

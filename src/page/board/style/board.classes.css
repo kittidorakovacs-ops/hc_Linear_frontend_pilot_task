@@ -74,7 +74,6 @@
 
 /* ==========================================================================
    BOARD – ÚJ FELADAT LINK / GOMB
-   (akkor használd, ha nem a hcl-btn-primary-sm-et használod)
    ========================================================================== */
 
 .board-add-task-link {
@@ -123,16 +122,16 @@
 
 .board-task-card--todo {
   background: var(--main-color-30);
-  border-color: rgba(74, 74, 74, 0.6);
+  border-radius: 8px;
+
 }
 
 .board-task-card--in_progress {
-  background: var(--button-background-color);
-  border-color: rgba(13, 70, 95, 0.8);
+ background: linear-gradient(135deg, var(--main-color), var(--main-color-30));
+    border-radius: 8px;
 }
 
 .board-task-card--done {
-  background: rgba(27, 226, 153, 0.219);
-  border-color: var(--primary-color);
+    background: linear-gradient(135deg, rgba(31, 255, 173, 0.575), var(--main-color-30));
+      border-radius: 8px;
 }
-

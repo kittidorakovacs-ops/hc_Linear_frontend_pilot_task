@@ -15,6 +15,7 @@ export const Page = styled(TaskPage)({
   color: "var(--text-color-light)",
   display: "flex",
   flexDirection: "column",
+  backdropFilter: "blur(8px)",
   gap: "40px",
 });
 
@@ -42,11 +43,11 @@ export const BoardCard = styled(Paper)({
   maxWidth: 1120,
   margin: "0 auto",
   borderRadius: 8,
-  background: "rgba(255, 255, 255, 0.22)",
+  background: "linear-gradient(135deg, rgba(23, 78, 92, 0.72), rgba(48, 74, 104, 0))",
   padding: "20px 22px 24px",
   boxSizing: "border-box",
   backdropFilter: "blur(6px)",
-  border: "1px solid rgba(255,255,255,0.05)",
+  border: "none",
 
   "@media (max-width: 900px)": {
     padding: "16px 14px 20px",
@@ -104,12 +105,12 @@ export const Column = styled("section")({
   minHeight: 220,
   maxHeight: 520,
   boxSizing: "border-box",
-  overflow: "hidden",
 
   "@media (max-width: 600px)": {
     maxHeight: "unset",
   },
 });
+
 
 
 export const ColumnHeader = styled(Box)({
