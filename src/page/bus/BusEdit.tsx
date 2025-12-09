@@ -21,10 +21,21 @@ import {
   type BusFormValues,
   type BusFormErrors,
   validateBusForm,
+  PLATE_PREFIX_REGEX,
+  PLATE_NUMBER_REGEX,
+  MODEL_ALLOWED_REGEX,
 } from "./untils/busForm.utils";
-import { useToast } from "../../component/ui/toast/ToastProvider";
+
 import "./style/css/bus.classes.css";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import {
+  BusPrimaryButton,
+  BusDangerButton,
+  BusBackButton,
+} from "./style/busButtons.style";
+import ConfirmDialog from "../../component/ui/modal/ConfirmDialog";
+import { useToast } from "../../component/ui/toast/ToastProvider";
+
 
 export function BusEdit() {
   const { id } = useParams();
@@ -38,6 +49,7 @@ export function BusEdit() {
 
   const [form, setForm] = useState<BusFormValues>(INITIAL_BUS_FORM);
   const [errors, setErrors] = useState<BusFormErrors>({});
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   // Betöltjük az adatot a formba
   useEffect(() => {
@@ -54,18 +66,42 @@ export function BusEdit() {
     });
   }, [data]);
 
+  const trimmedModel = form.model.trim();
+
+  const isModelValid =
+    trimmedModel.length >= 2 && MODEL_ALLOWED_REGEX.test(trimmedModel);
+
+  const isPlateValid =
+    PLATE_PREFIX_REGEX.test(form.platePrefix) &&
+    PLATE_NUMBER_REGEX.test(form.plateNumber);
+
+  const isCapacityValid = form.capacity >= 1 && form.capacity <= 200;
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
 
+    // MODELL – realtime tisztítás: csak betűk, számok, szóköz, kötőjel + max 50 karakter
+    if (name === "model") {
+      const cleaned = value
+        .replace(/[^A-Za-z0-9\- ]/g, "")
+        .slice(0, 50);
+
+      setForm((prev) => ({ ...prev, model: cleaned }));
+      setErrors((curr) => ({ ...curr, model: undefined }));
+      return;
+    }
+
+    // RENDSZÁM PREFIX – uppercase + csak betűk
     if (name === "platePrefix") {
-      const upper = value.toUpperCase();
+      const upper = value.toUpperCase().replace(/[^A-Z]/g, "");
       setForm((prev) => ({ ...prev, platePrefix: upper }));
       setErrors((curr) => ({ ...curr, plate: undefined }));
       return;
     }
 
+    // RENDSZÁM SZÁMOK – csak számok
     if (name === "plateNumber") {
       const numeric = value.replace(/\D/g, "");
       setForm((prev) => ({ ...prev, plateNumber: numeric }));
@@ -73,15 +109,12 @@ export function BusEdit() {
       return;
     }
 
-    if (name === "model") {
-      setForm((prev) => ({ ...prev, model: value }));
-      setErrors((curr) => ({ ...curr, model: undefined }));
-      return;
-    }
-
+    // KAPACITÁS – clamp 1–200 között
     if (name === "capacity") {
       const num = Number(value);
-      setForm((prev) => ({ ...prev, capacity: num }));
+      const safe = Math.max(1, Math.min(200, Number.isFinite(num) ? num : 0));
+
+      setForm((prev) => ({ ...prev, capacity: safe }));
       setErrors((curr) => ({ ...curr, capacity: undefined }));
       return;
     }
@@ -141,15 +174,20 @@ export function BusEdit() {
     navigate(`/buses/${busId}`);
   };
 
-  const handleDelete = () => {
-    if (!window.confirm("Biztosan törölni szeretnéd ezt a buszt?")) return;
+  // Csak a megerősítő dialog megnyitása
+  const handleDeleteRequest = () => {
+    setIsDeleteDialogOpen(true);
+  };
 
+  // Tényleges törlés a ConfirmDialog "Igen, törlöm" gombjára
+  const handleConfirmDelete = () => {
     deleteBusMutation.mutate(busId, {
       onSuccess: () => {
         showToast({
           variant: "success",
           message: "Busz sikeresen törölve.",
         });
+        setIsDeleteDialogOpen(false);
         navigate("/buses");
       },
       onError: () => {
@@ -157,6 +195,7 @@ export function BusEdit() {
           variant: "error",
           message: "Nem sikerült törölni a buszt. Próbáld újra.",
         });
+        setIsDeleteDialogOpen(false);
       },
     });
   };
@@ -172,7 +211,6 @@ export function BusEdit() {
 
   return (
     <S.Page>
-      {/* OLDAL FEJLÉC – mint BusDetail */}
       <S.Header>
         <S.Title variant="h3">Busz #{data.id} szerkesztése</S.Title>
         <S.Subtitle>
@@ -180,7 +218,6 @@ export function BusEdit() {
         </S.Subtitle>
       </S.Header>
 
-      {/* FORM KÁRTYA */}
       <S.Card>
         <S.CardHeader>
           <S.CardTitle>Busz adatai</S.CardTitle>
@@ -189,148 +226,159 @@ export function BusEdit() {
           </S.CardSubtitle>
         </S.CardHeader>
 
-    <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
+          {/* MODELL */}
+          <div className="bus-form-row">
+            <div className="bus-form-label">Modell</div>
+            <div className="bus-form-field">
+              <div className="bus-form-input-wrapper">
+                <input
+                  className="hcl-input"
+                  name="model"
+                  value={form.model}
+                  onChange={handleChange}
+                  maxLength={50}
+                  required
+                />
 
-  {/* MODELL */}
-  <div className="bus-form-row">
-    <div className="bus-form-label">Modell</div>
-    <div className="bus-form-field">
-      <div className="bus-form-input-wrapper">
-        <input
-          className="hcl-input"
-          name="model"
-          value={form.model}
-          onChange={handleChange}
-          required
-        />
+                {isModelValid && !errors.model && (
+                  <CheckCircleOutlineIcon className="bus-form-valid-icon" />
+                )}
 
-        {form.model.trim().length >= 2 && !errors.model && (
-          <CheckCircleOutlineIcon className="bus-form-valid-icon" />
-        )}
+                {errors.model && (
+                  <p className="hcl-input-error">{errors.model}</p>
+                )}
+              </div>
+            </div>
+          </div>
 
-        {errors.model && (
-          <p className="hcl-input-error">{errors.model}</p>
-        )}
-      </div>
-    </div>
-  </div>
+   {/* RENDSZÁM */}
+          <div className="bus-form-row">
+            <div className="bus-form-label">Rendszám</div>
+            <div className="bus-form-field">
+              <div className="bus-form-input-wrapper">
+                <div className="bus-plate-wrapper">
+                  <input
+                    className="hcl-input bus-plate-prefix"
+                    name="platePrefix"
+                    maxLength={4}
+                    value={form.platePrefix}
+                    onChange={handleChange}
+                    placeholder="ABC"
+                    required
+                  />
+                  <span>-</span>
+                  <input
+                    className="hcl-input bus-plate-number"
+                    name="plateNumber"
+                    maxLength={3}
+                    value={form.plateNumber}
+                    onChange={handleChange}
+                    placeholder="123"
+                    required
+                  />
+                </div>
 
-  {/* RENDSZÁM */}
-  <div className="bus-form-row">
-    <div className="bus-form-label">Rendszám</div>
-    <div className="bus-form-field">
-      <div className="bus-form-input-wrapper">
-        
-        <div className="bus-plate-wrapper">
-          <input
-            className="hcl-input bus-plate-prefix"
-            name="platePrefix"
-            maxLength={4}
-            value={form.platePrefix}
-            onChange={handleChange}
-            placeholder="ABC"
-            required
-          />
-          <span>-</span>
-          <input
-            className="hcl-input bus-plate-number"
-            name="plateNumber"
-            maxLength={3}
-            value={form.plateNumber}
-            onChange={handleChange}
-            placeholder="123"
-            required
-          />
-        </div>
+                {isPlateValid && !errors.plate && (
+                  <CheckCircleOutlineIcon className="bus-form-valid-icon" />
+                )}
 
-        {form.platePrefix && form.plateNumber && !errors.plate && (
-          <CheckCircleOutlineIcon className="bus-form-valid-icon" />
-        )}
+               
+                 {errors.plate && (
+                  <p className="hcl-input-error">{errors.plate}</p>
+                )}
 
-        {errors.plate && (
-          <p className="hcl-input-error">{errors.plate}</p>
-        )}
-      </div>
-    </div>
-  </div>
+              </div>
+            </div>
+          </div>
 
-  {/* STÁTUSZ */}
-  <div className="bus-form-row">
-    <div className="bus-form-label">Státusz</div>
-    <div className="bus-form-field">
-      <div className="bus-form-input-wrapper">
-        <select
-          className="hcl-select"
-          name="status"
-          value={form.status}
-          onChange={handleChange}
-        >
-          <option value="operational">operational</option>
-          <option value="active">active</option>
-          <option value="maintenance">maintenance</option>
-          <option value="inactive">inactive</option>
-        </select>
-      </div>
-    </div>
-  </div>
 
-  {/* KAPACITÁS */}
-  <div className="bus-form-row">
-    <div className="bus-form-label">Kapacitás</div>
-    <div className="bus-form-field">
-      <div className="bus-form-input-wrapper">
-        <input
-          className="hcl-input"
-          type="number"
-          name="capacity"
-          value={form.capacity}
-          onChange={handleChange}
-          required
-          min={1}
-          max={200}
-        />
+          {/* STÁTUSZ */}
+          <div className="bus-form-row">
+            <div className="bus-form-label">Státusz</div>
+            <div className="bus-form-field">
+              <div className="bus-form-input-wrapper">
+                <select
+                  className="hcl-select"
+                  name="status"
+                  value={form.status}
+                  onChange={handleChange}
+                >
+                  <option value="operational">operational</option>
+                  <option value="active">active</option>
+                  <option value="maintenance">maintenance</option>
+                  <option value="inactive">inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
 
-        {form.capacity >= 1 &&
-          form.capacity <= 200 &&
-          !errors.capacity && (
-            <CheckCircleOutlineIcon className="bus-form-valid-icon" />
-          )}
+          {/* KAPACITÁS */}
+          <div className="bus-form-row">
+            <div className="bus-form-label">Kapacitás</div>
+            <div className="bus-form-field">
+              <div className="bus-form-input-wrapper">
+                <input
+                  className="hcl-input"
+                  type="number"
+                  name="capacity"
+                  value={form.capacity}
+                  onChange={handleChange}
+                  required
+                  min={1}
+                  max={200}
+                />
 
-        {errors.capacity && (
-          <p className="hcl-input-error">{errors.capacity}</p>
-        )}
-      </div>
-    </div>
-  </div>
+                {isCapacityValid && !errors.capacity && (
+                  <CheckCircleOutlineIcon className="bus-form-valid-icon" />
+                )}
 
-  
-  <S.FormFooter>
-    <S.LeftActions>
-      <button
-        type="button"
-        className="hcl-back-btn"
-        onClick={handleCancel}
-      >
-        ← <span>Mégse</span>
-      </button>
+                {errors.capacity && (
+                  <p className="hcl-input-error">{errors.capacity}</p>
+                )}
+              </div>
+            </div>
+          </div>
 
-      <S.DeleteButton type="button" onClick={handleDelete}>
-        <DeleteOutlineIcon fontSize="small" />
-        <span>Törlés</span>
-      </S.DeleteButton>
-    </S.LeftActions>
+          <S.FormFooter>
+            <S.LeftActions>
+              <BusBackButton type="button" onClick={handleCancel}>
+                ← <span>Mégse</span>
+              </BusBackButton>
 
-    <S.SaveButton type="submit" disabled={updateBusMutation.isPending}>
-      <SaveIcon fontSize="small" />
-      <span>
-        {updateBusMutation.isPending ? "Mentés..." : "Mentés"}
-      </span>
-    </S.SaveButton>
-  </S.FormFooter>
+              <BusDangerButton
+                type="button"
+                onClick={handleDeleteRequest}
+                disabled={deleteBusMutation.isPending}
+              >
+                <DeleteOutlineIcon fontSize="small" />
+                <span>Törlés</span>
+              </BusDangerButton>
+            </S.LeftActions>
 
-</form>
-
+            <BusPrimaryButton
+              type="submit"
+              disabled={updateBusMutation.isPending}
+            >
+              <SaveIcon fontSize="small" />
+              <span>
+                {updateBusMutation.isPending ? "Mentés..." : "Mentés"}
+              </span>
+            </BusPrimaryButton>
+          </S.FormFooter>
+        </form>
       </S.Card>
+
+      {/* TÖRLÉS MEGERŐSÍTŐ DIALOG */}
+      <ConfirmDialog
+        open={isDeleteDialogOpen}
+        title="Törlés megerősítése"
+        message={`Biztosan törölni szeretnéd: ${data.model}?`}
+        confirmLabel="Igen, törlöm"
+        cancelLabel="Mégse"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsDeleteDialogOpen(false)}
+      />
     </S.Page>
   );
 }

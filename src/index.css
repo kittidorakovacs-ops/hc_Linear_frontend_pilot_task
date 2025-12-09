@@ -1,5 +1,6 @@
 /* ---- GLOBAL ---- */
 
+
 body, html {
     margin: 0;
     padding: 0;
@@ -45,34 +46,38 @@ body, html {
 }
 
 
+/* ========================================================================== */
+/*     GLOBAL CONFIRM DIALOG BUTTONS                                         */
+/* ========================================================================== */
 
-
-.hcl-btn {
+/* CANCEL (Mégse) */
+.hcl-btn-cancel {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  background: var(--button-background-color-grey);
+  color: var(--text-color-dark);
   border: none;
   border-radius: var(--button-border-radius);
   cursor: pointer;
-  font-weight: 500;
-  font-size: 0.9rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
   transition:
     background-color 0.2s ease,
     transform 0.1s ease,
     box-shadow 0.2s ease;
 }
 
-.hcl-icon-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
-  border: 1px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--icon-button-color);
-  color: var(--text-color-dark);
+.hcl-btn-cancel:hover {
+  background: #cdd8dc;
+  transform: translateY(-1px);
+}
+
+/* CONFIRM (Igen, törlöm) */
+.hcl-btn-confirm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  background: var(--cancel-delete-button-color);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--button-border-radius);
   cursor: pointer;
   transition:
     background-color 0.2s ease,
@@ -80,19 +85,17 @@ body, html {
     box-shadow 0.2s ease;
 }
 
-.hcl-icon-btn svg {
-  font-size: 18px;
-}
-
-.hcl-icon-btn:hover {
-  background: var(--primary-color);
-  color: var(--text-color-light);
+.hcl-btn-confirm:hover {
+  background: #c52822;
+  box-shadow: 0 0 10px rgba(229, 52, 43, 0.45);
   transform: translateY(-1px);
-  box-shadow: 0 0 10px rgba(27, 226, 154, 0.45);
 }
 
-.hcl-input-error {
-  margin-top: 4px;
-  font-size: 0.75rem;
-  color: #f97316;
+/* Disabled */
+.hcl-btn-cancel:disabled,
+.hcl-btn-confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }

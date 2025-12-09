@@ -36,18 +36,16 @@ export const Card = styled(Paper)({
   width: "100%",
   maxWidth: 1120,
   margin: "0 auto",
-  borderRadius: 22,
+  borderRadius: "var(--button-border-radius)",
   background: "rgba(255,255,255,0)",
   boxShadow: "none",
   padding: "20px 24px 24px",
   boxSizing: "border-box",
 
   "@media (max-width: 600px)": {
-    padding: "12px 0px 14px",   
+    padding: "12px 0px 14px",
   },
 });
-
-
 
 export const CardHeaderRow = styled(Box)({
   display: "flex",
@@ -62,10 +60,9 @@ export const CardTitle = styled(Typography)({
   color: "var(--text-color-light)",
 });
 
-
 export const TableWrapper = styled("div")({
-  marginTop: 10,
-  borderRadius: 16,
+  marginTop: 20,
+  borderRadius: "var(--button-border-radius)",
   overflow: "hidden",
   border: "1px solid var(--main-color)",
 
@@ -74,21 +71,20 @@ export const TableWrapper = styled("div")({
   },
 });
 
-
-
 export const Table = styled("table")({
   width: "100%",
   borderCollapse: "separate",
   borderSpacing: 0,
+  tableLayout: "fixed", 
 
   "& th": {
-    padding: "20px 16px",
+    padding: "15px 16px",
     textAlign: "left",
-    fontSize: "0.75rem",
     textTransform: "uppercase",
     letterSpacing: "0.08em",
     color: "var(--text-color-lighter)",
     borderBottom: "1px solid var(--main-color)",
+    backgroundColor: "rgba(21, 98, 131, 0.3)",
   },
 
   "& th.bus-cell-right": {
@@ -96,6 +92,14 @@ export const Table = styled("table")({
   },
 
   "& th.bus-cell-center": {
+    textAlign: "center",
+  },
+
+  "& td.bus-cell-right": {
+    textAlign: "right",
+  },
+
+  "& td.bus-cell-center": {
     textAlign: "center",
   },
 
@@ -113,7 +117,6 @@ export const Table = styled("table")({
   "& tbody tr:hover": {
     background: "rgba(0,0,0,0.12)",
   },
-
 
   "@media (max-width: 1024px)": {
     borderCollapse: "separate",
@@ -166,10 +169,25 @@ export const Table = styled("table")({
   },
 });
 
+/** MODELL OSZLOP – hosszú szöveg ellipsis-szel desktopon */
+export const ModelCell = styled("td")({
+  maxWidth: 260,
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+
+  "@media (maxWidth: 1024px)": {
+    maxWidth: "100%",
+    whiteSpace: "normal",
+    overflow: "visible",
+    textOverflow: "clip",
+    wordBreak: "break-word",
+  },
+});
+
 export const CellRight = styled("td")({
   textAlign: "right",
 });
-
 
 export const ActionsCell = styled("td")({
   textAlign: "center",

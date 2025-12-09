@@ -39,7 +39,10 @@ export const Card = styled(Paper)({
   boxShadow: "none",
   padding: "24px 32px",
   boxSizing: "border-box",
+
+  color: "var(--text-color-light)",          
 });
+
 
 export const CardHeader = styled(Box)({
   marginBottom: 20,
@@ -77,7 +80,7 @@ export const SaveButton = styled("button")({
   background: "var(--button-background-color)",
   color: "var(--text-color-light)",
   padding: "10px 18px",
-  borderRadius: 999,
+  borderRadius: "var(--button-border-radius)",
   border: "none",
   fontWeight: 600,
   fontSize: "0.95rem",
@@ -114,7 +117,7 @@ export const DeleteButton = styled("button")({
   background: "rgba(229, 52, 43, 0.15)",
   color: "var(--cancel-delete-button-color)",
   padding: "8px 14px",
-  borderRadius: 999,
+  borderRadius: "var(--button-border-radius)",
   border: "1px solid rgba(229, 52, 43, 0.4)",
   fontWeight: 500,
   fontSize: "0.9rem",

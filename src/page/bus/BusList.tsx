@@ -8,6 +8,13 @@ import {
 } from "./bus.hooks";
 import type { Bus } from "./bus.types";
 import * as S from "./style/bus.style";
+import {
+  BusListCtaButton,
+  BusIconView,
+  BusIconEdit,
+  BusIconDelete,
+} from "./style/busButtons.style";
+
 import { busPageData } from "./data/bus.data";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
@@ -17,14 +24,15 @@ import DirectionsBusFilledIcon from "@mui/icons-material/DirectionsBusFilled";
 import "./style/css/bus.classes.css";
 import BusCreateModal from "./BusCreateModal";
 import { useToast } from "../../component/ui/toast/ToastProvider";
+import ConfirmDialog from "../../component/ui/modal/ConfirmDialog";
 
 export function BusList() {
   const { data, isLoading, isError } = useBusesQuery();
   const deleteBusMutation = useDeleteBusMutation();
   const { showToast } = useToast();
 
-
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [busToDelete, setBusToDelete] = useState<Bus | null>(null);
 
   const handleOpenCreate = () => {
     setIsCreateOpen(true);
@@ -34,21 +42,29 @@ export function BusList() {
     setIsCreateOpen(false);
   };
 
-  const handleDelete = (bus: Bus) => {
-    if (!window.confirm(`Biztosan törölni szeretnéd: ${bus.model}?`)) return;
+  // csak a megerősítő modal megnyitása
+  const handleDeleteRequest = (bus: Bus) => {
+    setBusToDelete(bus);
+  };
 
-    deleteBusMutation.mutate(bus.id, {
+  // tényleges törlés a ConfirmDialog "Igen, törlöm" gombjára
+  const handleConfirmDelete = () => {
+    if (!busToDelete) return;
+
+    deleteBusMutation.mutate(busToDelete.id, {
       onSuccess: () => {
         showToast({
           variant: "success",
-          message: `„${bus.model}” busz sikeresen törölve.`,
+          message: `„${busToDelete.model}” busz sikeresen törölve.`,
         });
+        setBusToDelete(null);
       },
       onError: () => {
         showToast({
           variant: "error",
           message: "Nem sikerült törölni a buszt. Próbáld újra.",
         });
+        setBusToDelete(null);
       },
     });
   };
@@ -75,93 +91,106 @@ export function BusList() {
       {/* FŐ KÁRTYA – táblázat + Új busz CTA */}
       <S.Card>
         <S.CardHeaderRow>
-          <S.CardTitle>Buszok</S.CardTitle>
-          <button
-            className="hcl-btn hcl-btn-cta"
-            onClick={handleOpenCreate}
-            type="button"
-          >
-            <AddRoundedIcon fontSize="small" />
-            <DirectionsBusFilledIcon fontSize="small" />
-            <span>Új busz</span>
-          </button>
-        </S.CardHeaderRow>
+        <S.CardTitle>Buszok</S.CardTitle>
 
+        <BusListCtaButton
+          type="button"
+          onClick={handleOpenCreate}
+        >
+          <AddRoundedIcon fontSize="small" />
+          <DirectionsBusFilledIcon fontSize="small" />
+          <span>Új busz</span>
+        </BusListCtaButton>
+      </S.CardHeaderRow>
         <S.TableWrapper>
           <S.Table>
-            <thead>
+           <thead>
               <tr>
                 <th>ID</th>
                 <th>Modell</th>
-                <th className="bus-cell-right">Rendszám</th>
-                <th className="bus-cell-center">Státusz</th>
+                <th className="bus-cell-center">Rendszám</th>
                 <th className="bus-cell-right">Kapacitás</th>
+                <th className="bus-cell-center">Státusz</th>
                 <th className="bus-cell-center">Műveletek</th>
               </tr>
             </thead>
-            <tbody>
-              {data?.map((bus) => (
-                <tr key={bus.id}>
-                  <td data-label="ID">{bus.id}</td>
-                  <td data-label="Modell">{bus.model}</td>
-                  <S.CellRight data-label="Rendszám">
-                    {bus.plate}
-                  </S.CellRight>
-                  <td data-label="Státusz" className="bus-status-cell">
-                    <span
-                      className={`bus-status-pill bus-status-${bus.status}`}
-                    >
-                      {bus.status}
-                    </span>
-                  </td>
-                  <S.CellRight data-label="Kapacitás">
-                    {bus.capacity}
-                  </S.CellRight>
-                  <S.ActionsCell data-label="Műveletek">
-                    <S.Actions>
-                     <Link
-                          to={`/buses/${bus.id}`}
-                          className="hcl-icon-btn bus-action-view"
-                        >
-                          <VisibilityIcon fontSize="small" />
+
+          <tbody>
+                {data?.map((bus) => (
+                  <tr key={bus.id}>
+                    <td data-label="ID">{bus.id}</td>
+                    <S.ModelCell data-label="Modell" title={bus.model}>
+                      {bus.model}
+                    </S.ModelCell>
+
+                    {/* RENDSZÁM – KÖZÉPRE */}
+                    <td data-label="Rendszám" className="bus-cell-center">
+                      {bus.plate}
+                    </td>
+
+                    {/* KAPACITÁS – JOBBRA */}
+                    <S.CellRight data-label="Kapacitás">
+                      {bus.capacity}
+                    </S.CellRight>
+
+                    {/* STÁTUSZ – KÖZÉPRE */}
+                    <td data-label="Státusz" className="bus-cell-center">
+                      <span className={`bus-status-pill bus-status-${bus.status}`}>
+                        {bus.status}
+                      </span>
+                    </td>
+
+                    {/* MŰVELETEK */}
+                    <S.ActionsCell data-label="Műveletek">
+                      <S.Actions>
+                        <Link to={`/buses/${bus.id}`} title="Megtekintés">
+                          <BusIconView type="button">
+                            <VisibilityIcon fontSize="small" />
+                          </BusIconView>
                         </Link>
 
-                        <Link
-                          to={`/buses/${bus.id}/edit`}
-                          className="hcl-icon-btn bus-action-edit"
-                        >
-                          <EditIcon fontSize="small" />
+                        <Link to={`/buses/${bus.id}/edit`} title="Szerkesztés">
+                          <BusIconEdit type="button">
+                            <EditIcon fontSize="small" />
+                          </BusIconEdit>
                         </Link>
 
+                        <BusIconDelete
+                          type="button"
+                          aria-label={`Busz #${bus.id} törlése`}
+                          title="Törlés"
+                          onClick={() => handleDeleteRequest(bus)}
+                          disabled={deleteBusMutation.isPending}
+                        >
+                          <DeleteOutlineIcon fontSize="small" />
+                        </BusIconDelete>
+                      </S.Actions>
+                    </S.ActionsCell>
+                  </tr>
+                ))}
+             </tbody>
 
-                      {/* TÖRLÉS */}
-                      <button
-                        type="button"
-                        className="hcl-icon-btn hcl-icon-btn--danger"
-                        aria-label={`Busz #${bus.id} törlése`}
-                        title="Törlés"
-                        onClick={() => handleDelete(bus)}
-                        disabled={deleteBusMutation.isPending}
-                      >
-                        <DeleteOutlineIcon fontSize="small" />
-                      </button>
-                    </S.Actions>
-                  </S.ActionsCell>
-                </tr>
-              ))}
-
-              {data && data.length === 0 && (
-                <tr>
-                  <td colSpan={6}>Jelenleg nincs felvett busz.</td>
-                </tr>
-              )}
-            </tbody>
           </S.Table>
         </S.TableWrapper>
       </S.Card>
 
       {/* ÚJ BUSZ MODAL */}
       <BusCreateModal open={isCreateOpen} onClose={handleCloseCreate} />
+
+      {/* TÖRLÉS MEGERŐSÍTŐ DIALOG */}
+      <ConfirmDialog
+        open={!!busToDelete}
+        title="Törlés megerősítése"
+        message={
+          busToDelete
+            ? `Biztosan törölni szeretnéd: ${busToDelete.model}?`
+            : "Biztosan törlöd ezt a buszt?"
+        }
+        confirmLabel="Igen, törlöm"
+        cancelLabel="Mégse"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setBusToDelete(null)}
+      />
     </S.Page>
   );
 }

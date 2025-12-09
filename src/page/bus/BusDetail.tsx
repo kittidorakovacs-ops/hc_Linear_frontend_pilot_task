@@ -1,10 +1,12 @@
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { Typography } from "@mui/material";
+import { useParams, useNavigate } from "react-router-dom";
 import { useBusQuery } from "./bus.hooks";
 import * as S from "./style/busDetail.style";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-
+import {
+  BusIconEdit,
+  BusBackButton,
+} from "./style/busButtons.style";
 
 export function BusDetail() {
   const { id } = useParams();
@@ -14,6 +16,7 @@ export function BusDetail() {
   const { data, isLoading, isError } = useBusQuery(busId);
 
   if (isLoading) return <S.Page>Betöltés...</S.Page>;
+
   if (isError || !data)
     return (
       <S.Page>
@@ -31,25 +34,17 @@ export function BusDetail() {
       </S.Header>
 
       <S.Card>
-
         {/* Cím + Szerkesztés CTA */}
         <S.CardHeader>
-          <Typography
-            fontWeight={700}
-            sx={{ fontSize: "1.2rem", color: "var(--primary-color)" }}
+          <S.CardTitle>Busz adatai</S.CardTitle>
+
+          <BusIconEdit
+            type="button"
+            title="Szerkesztés"
+            onClick={() => navigate(`/buses/${data.id}/edit`)}
           >
-            Busz adatai
-          </Typography>
-
-            <Link
-            to={`/buses/${data.id}/edit`}
-            className="hcl-edit-cta"
-            >
             <EditIcon fontSize="small" />
-            <span>Szerkesztés</span>
-            </Link>
-
-
+          </BusIconEdit>
         </S.CardHeader>
 
         {/* Details */}
@@ -76,12 +71,11 @@ export function BusDetail() {
         </S.DetailsWrapper>
 
         <div style={{ marginTop: "24px" }}>
-  <button onClick={() => navigate("/buses")} className="hcl-back-btn">
-    <ArrowBackIosNewIcon fontSize="small" />
-    <span>Vissza</span>
-  </button>
-</div>
-
+          <BusBackButton type="button" onClick={() => navigate("/buses")}>
+            <ArrowBackIosNewIcon fontSize="small" />
+            <span>Vissza</span>
+          </BusBackButton>
+        </div>
       </S.Card>
     </S.Page>
   );

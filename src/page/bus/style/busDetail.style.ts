@@ -42,6 +42,12 @@ export const Card = styled(Paper)({
   boxSizing: "border-box",
 });
 
+export const CardTitle = styled(Typography)({
+  fontWeight: 700,
+  fontSize: "1.2rem",
+  color: "var(--primary-color)",
+});
+
 export const BackButtonRow = styled(Box)({
   marginBottom: "16px",
 });

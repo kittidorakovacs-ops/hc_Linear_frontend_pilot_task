@@ -1,41 +1,4 @@
-.hcl-btn-cta {
-  background: var(--button-background-color);
-  color: var(--text-color-light);
-  padding: 12px 22px;
-  font-size: 1rem;
-  letter-spacing: 0.03em;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
 
-.hcl-btn-cta span {
-  margin-top: 1px;
-}
-
-.hcl-btn-cta svg {
-  font-size: 20px;
-}
-
-.hcl-btn-cta:hover {
-  background: var(--button-background-color-hover);
-  color: var(--text-color-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 0 16px rgba(27, 226, 154, 0.45);
-}
-
-.hcl-icon-btn--danger {
-  background: rgba(255, 255, 255, 0.757);
-  color: var(--cancel-delete-button-color);
-  margin-left: 16px;
-  padding: 0 14px;
-  border-radius: 4px;
-}
-
-.hcl-icon-btn--danger:hover {
-  background: var(--cancel-delete-button-color);
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 0 10px rgba(229, 52, 43, 0.5);
-}
 
 .bus-status-cell {
   text-align: center;
@@ -47,11 +10,11 @@
   justify-content: center;
   min-width: 90px;
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--button-border-radius);
   font-size: 0.75rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  font-weight: 600;
 }
 
 .bus-status-operational {
@@ -73,91 +36,19 @@
 }
 
 .bus-status-inactive {
-  background: rgba(148, 163, 184, 0.2);
+  background: rgba(148, 163, 184, 0.20);
   color: #e5e7eb;
   border: 1px solid rgba(148, 163, 184, 0.4);
 }
 
-.hcl-edit-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  text-decoration: none;
-  border: 1px solid rgba(59, 130, 246, 0.35);
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.1s ease;
-}
+/* ==========================================================================
+   EDIT CTA (Megtekintés / Szerkesztés / Törlés gombok)
+   ========================================================================== */
 
-.hcl-edit-cta span {
-  margin-top: 1px;
-}
 
-.hcl-edit-cta svg {
-  font-size: 18px;
-}
-
-.hcl-edit-cta:hover {
-  background: rgba(59, 130, 246, 0.25);
-  color: var(--text-color-light);
-  box-shadow: 0 0 14px rgba(59, 130, 246, 0.45);
-  transform: translateY(-1px);
-}
-
-@media (max-width: 600px) {
-  .hcl-edit-cta span {
-    display: none;
-  }
-
-  .hcl-edit-cta {
-    padding: 8px;
-    min-width: 40px;
-    justify-content: center;
-  }
-}
-
-.hcl-back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-color-light);
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  border: 1px solid rgba(255,255,255,0.12);
-  text-decoration: none;
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.1s ease;
-}
-
-.hcl-back-btn:hover {
-  background: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 0 10px rgba(255,255,255,0.25);
-  transform: translateY(-1px);
-}
-
-@media (max-width: 600px) {
-  .hcl-back-btn span {
-    display: none;
-  }
-
-  .hcl-back-btn {
-    padding: 8px;
-    min-width: 40px;
-    justify-content: center;
-  }
-}
+/* ==========================================================================
+   FORM ROW + LABEL + FIELD (Modal + BusEdit közös)
+   ========================================================================== */
 
 .modal-row,
 .bus-form-row {
@@ -165,12 +56,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 0 14px;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.18);
-}
-
-.modal-row:last-of-type,
-.bus-form-row:last-of-type {
-  border-bottom: none;
+  border-bottom: 1px dashed rgba(255,255,255,0.18);
 }
 
 .modal-label,
@@ -195,86 +81,51 @@
 }
 
 .app-modal-body .hcl-input,
-.app-modal-body .hcl-select,
 .bus-form-input-wrapper .hcl-input,
+.app-modal-body .hcl-select,
 .bus-form-input-wrapper .hcl-select {
   width: 100%;
-  padding: 10px 14px;
+  padding: 8px 10px;
   border-radius: var(--input-border-radius);
   border: 1px solid var(--border-color);
   font-size: 0.95rem;
   box-sizing: border-box;
 }
 
+/* Valid ikon */
 .modal-valid-icon,
 .bus-form-valid-icon {
   position: absolute;
-  left: -28px;
+  left: -30px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--primary-color);
-  font-size: 14px;
+  font-size: 12px;
   pointer-events: none;
 }
+
+/* ==========================================================================
+   RENDSZÁM INPUTOK
+   ========================================================================== */
 
 .bus-plate-wrapper {
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 100%;             
 }
 
-.bus-plate-prefix {
+.bus-plate-prefix,
+.bus-plate-number {
   width: 80px !important;
   text-align: center;
   text-transform: uppercase;
 }
 
-.bus-plate-number {
-  width: 80px !important;
-  text-align: center;
-}
-
-.bus-action-view {
-  background: rgba(59, 130, 246, 0.12);
-  color: #3b82f6;
-}
-
-.bus-action-view:hover {
-  background: rgba(59, 130, 246, 0.25);
-  box-shadow: 0 0 10px rgba(59,130,246,0.35);
-}
-
-.bus-action-edit {
-  background: rgba(255,255,255,0.12);
-  color: var(--text-color-light);
-}
-
-.bus-action-edit:hover {
-  background: rgba(255,255,255,0.24);
-  box-shadow: 0 0 10px rgba(255,255,255,0.35);
-}
-
+/* ==========================================================================
+   MOBIL RESPONSIVE TUNING
+   ========================================================================== */
 
 @media (max-width: 600px) {
-  .hcl-btn-cta span {
-    display: none;
-  }
-
-  .hcl-btn-cta {
-    padding: 10px;           
-    min-width: 44px;         
-    justify-content: center; 
-  }
-
-  .hcl-btn-cta svg {
-    font-size: 20px;
-  }
-}
-
-
-@media (max-width: 600px) {
-
   .modal-row,
   .bus-form-row {
     padding: 6px 0 10px;
@@ -287,13 +138,12 @@
 
   .modal-field,
   .bus-form-field {
-    flex: 0 0 55%;      
+    flex: 0 0 55%;
   }
 
   .modal-input-wrapper,
   .bus-form-input-wrapper {
     width: 180px;
-    max-width: 100%;
   }
 
   .hcl-input,
@@ -302,19 +152,26 @@
     font-size: 0.85rem !important;
   }
 
-  .bus-plate-prefix,
-  .bus-plate-number {
-    width: 60px !important;  
-    font-size: 0.85rem;
+  .bus-plate-wrapper {
+    gap: 4px;
   }
 
-  .bus-plate-wrapper {
-    gap: 4px;                 
+  .bus-plate-prefix,
+  .bus-plate-number {
+    width: 60px !important;
   }
 
   .modal-valid-icon,
   .bus-form-valid-icon {
     left: -25px;
-      font-size: 9px;
+    font-size: 9px;
   }
 }
+
+.bus-plate-hint {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--text-color-lighter);
+}
+
+

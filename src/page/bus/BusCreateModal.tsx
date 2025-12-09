@@ -4,14 +4,18 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useCreateBusMutation } from "./bus.hooks";
 import type { Bus } from "./bus.types";
 import { useToast } from "../../component/ui/toast/ToastProvider";
+
 import {
   INITIAL_BUS_FORM,
   type BusFormValues,
   type BusFormErrors,
   PLATE_PREFIX_REGEX,
   PLATE_NUMBER_REGEX,
+  MODEL_ALLOWED_REGEX,
   validateBusForm,
 } from "./untils/busForm.utils";
+
+import { BusPrimarySmallButton } from "./style/busButtons.style";
 
 interface BusCreateModalProps {
   open: boolean;
@@ -25,11 +29,15 @@ export default function BusCreateModal({ open, onClose }: BusCreateModalProps) {
   const [form, setForm] = useState<BusFormValues>(INITIAL_BUS_FORM);
   const [errors, setErrors] = useState<BusFormErrors>({});
 
+  const trimmedModel = form.model.trim();
+
+  const isModelValid =
+    trimmedModel.length >= 2 && MODEL_ALLOWED_REGEX.test(trimmedModel);
+
   const isPlateValid =
     PLATE_PREFIX_REGEX.test(form.platePrefix) &&
     PLATE_NUMBER_REGEX.test(form.plateNumber);
 
-  const isModelValid = form.model.trim().length >= 2;
   const isCapacityValid = form.capacity >= 1 && form.capacity <= 200;
 
   const resetForm = () => {
@@ -42,13 +50,26 @@ export default function BusCreateModal({ open, onClose }: BusCreateModalProps) {
   ) => {
     const { name, value } = e.target;
 
+    // MODELL – realtime tisztítás
+    if (name === "model") {
+      const cleaned = value
+        .replace(/[^A-Za-z0-9\- ]/g, "")
+        .slice(0, 50);
+
+      setForm((prev) => ({ ...prev, model: cleaned }));
+      setErrors((curr) => ({ ...curr, model: undefined }));
+      return;
+    }
+
+    // RENDSZÁM PREFIX – uppercase + csak betűk
     if (name === "platePrefix") {
-      const upper = value.toUpperCase();
+      const upper = value.toUpperCase().replace(/[^A-Z]/g, "");
       setForm((prev) => ({ ...prev, platePrefix: upper }));
       setErrors((prev) => ({ ...prev, plate: undefined }));
       return;
     }
 
+    // RENDSZÁM SZÁMOK – csak számok
     if (name === "plateNumber") {
       const numeric = value.replace(/\D/g, "");
       setForm((prev) => ({ ...prev, plateNumber: numeric }));
@@ -56,20 +77,17 @@ export default function BusCreateModal({ open, onClose }: BusCreateModalProps) {
       return;
     }
 
-    if (name === "model") {
-      setForm((prev) => ({ ...prev, model: value }));
-      setErrors((prev) => ({ ...prev, model: undefined }));
-      return;
-    }
-
+    // KAPACITÁS – clamp 1–200 között
     if (name === "capacity") {
       const num = Number(value);
-      setForm((prev) => ({ ...prev, capacity: num }));
+      const safe = Math.max(1, Math.min(200, Number.isFinite(num) ? num : 0));
+
+      setForm((prev) => ({ ...prev, capacity: safe }));
       setErrors((prev) => ({ ...prev, capacity: undefined }));
       return;
     }
 
-    // status, stb.
+    // STATUS stb.
     setForm((prev) => ({
       ...prev,
       [name]: value,
@@ -139,11 +157,14 @@ export default function BusCreateModal({ open, onClose }: BusCreateModalProps) {
                 name="model"
                 value={form.model}
                 onChange={handleChange}
+                maxLength={50}
                 required
               />
+
               {isModelValid && !errors.model && (
                 <CheckCircleOutlineIcon className="modal-valid-icon" />
               )}
+
               {errors.model && (
                 <p className="hcl-input-error">{errors.model}</p>
               )}
@@ -156,14 +177,9 @@ export default function BusCreateModal({ open, onClose }: BusCreateModalProps) {
           <div className="modal-label">Rendszám</div>
           <div className="modal-field">
             <div className="modal-input-wrapper">
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div className="bus-plate-wrapper">
                 <input
-                  className="hcl-input"
-                  style={{
-                    width: 80,
-                    textAlign: "center",
-                    textTransform: "uppercase",
-                  }}
+                  className="hcl-input bus-plate-prefix"
                   name="platePrefix"
                   maxLength={4}
                   value={form.platePrefix}
@@ -173,8 +189,7 @@ export default function BusCreateModal({ open, onClose }: BusCreateModalProps) {
                 />
                 <span>-</span>
                 <input
-                  className="hcl-input"
-                  style={{ width: 80, textAlign: "center" }}
+                  className="hcl-input bus-plate-number"
                   name="plateNumber"
                   maxLength={3}
                   value={form.plateNumber}
@@ -232,9 +247,11 @@ export default function BusCreateModal({ open, onClose }: BusCreateModalProps) {
                 min={1}
                 max={200}
               />
+
               {isCapacityValid && !errors.capacity && (
                 <CheckCircleOutlineIcon className="modal-valid-icon" />
               )}
+
               {errors.capacity && (
                 <p className="hcl-input-error">{errors.capacity}</p>
               )}
@@ -249,14 +266,12 @@ export default function BusCreateModal({ open, onClose }: BusCreateModalProps) {
         >
           <div className="modal-label" />
           <div className="modal-field" style={{ justifyContent: "flex-end" }}>
-            <button
-            type="submit"
-            className="modal-create-btn"
-            disabled={createBusMutation.isPending}
+            <BusPrimarySmallButton
+              type="submit"
+              disabled={createBusMutation.isPending}
             >
-            {createBusMutation.isPending ? "Mentés..." : "Busz hozzáadása"}
-            </button>
-
+              {createBusMutation.isPending ? "Mentés..." : "Busz hozzáadása"}
+            </BusPrimarySmallButton>
           </div>
         </div>
       </form>
