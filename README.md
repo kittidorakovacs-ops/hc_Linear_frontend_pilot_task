@@ -70,37 +70,146 @@ Resource: /board
 | Törlés              | `DELETE /resource/:id` | Egy elem törlése               |
 
 
-Frontend Tesztfeladat
+<!-- Feladatmegoldás -->
 
-A projekt fejlesztéséhez két backend használható, ezek indítási lépései a README-ben találhatóak.
-Leadási követelmények
 
-    Klónozd le a kiinduló repository-t a saját gépedre.
-    A feladat kidolgozása után hozd létre a saját GitLab fiókodban egy új repository-t, és töltsd fel oda a megoldást.
-    A kész projekt GitLab repository linkjét küldd vissza.
+A modulok saját API-réteget, hookokat, komponenseket és stílusfájlokat használnak — így a kódbázis jól szeparált és könnyen karbantartható.
 
-Általános követelmények
+---
 
-    A kommunikáció Axios-szal történjen.
-    A lekérésekhez TanStack Query, az adatmódosításhoz TanStack Mutation legyen használva.
-    A megoldás legyen moduláris és átlátható.
+# 1. Busz CRUD modul
 
-1. Feladat – Busz CRUD oldal
+A busz modul funkciói:
 
-Feladatok:
+- buszok listázása reszponzív táblázatban  
+- új busz felvétele modálban  
+- részletező oldal  
+- szerkesztési felület valós idejű validációval  
+- törlés megerősítése ConfirmDialog segítségével  
 
-    Készíts egy listázó oldalt táblázattal.
-    Készíts egy gombot, ami felnyit 1 formot tartalmazó modált az új busz felvételéhez.
-    Legyen törlés művelet a sorokon.
-    Legyen egy külön megtekintő és szerkesztő oldala egy adott sornak.
+Az adatkezelés teljes egészében **TanStack Query**-n keresztül történik,  
+az űrlapvalidáció külön `utils` fájlban található.
 
-2. Feladat – Drag & Drop táblázat
+---
 
-Feladatok:
+# 2. Drag & Drop Feladatboard
 
-    Készíts egy drag & drop felületet, ahol a feladatok az oszlopok között mozgathatók.
-    A mozgatás után a feladat status mezője frissüljön a backendben.
-    A felület három oszlopból álljon: Teendő (todo), Folyamatban (in_progress), Kész (done).
-    A feladatkártyák legyenek áthúzhatók egyik oszlopból a másikba.
-    Legyen lehetőség új feladatot hozzáadni (minimum a title megadásával).
-    Legyen lehetőség egy feladat törlésére is.
+A board három státuszoszlopból áll:
+
+- **todo**
+- **in_progress**
+- **done**
+
+Funkciók:
+
+- feladatok áthúzása oszlopok között  
+- státusz frissítése a backendben  
+- új feladat létrehozása  
+- feladat törlése  
+- mobilon státuszválasztó modál  
+- inline szerkesztés  
+
+A drag & drop logika és a státuszfrissítések React Query mutationökkel működnek.
+
+---
+
+# Globális UI elemek
+
+A következő komponensek modulfüggetlenek és újrahasznosíthatók:
+
+- **Modal** – általános modális ablak  
+- **ConfirmDialog** – egységesített megerősítő dialógus  
+- **ToastProvider** – alkalmazásszintű értesítések  
+
+Ezek a `component/ui/` mappában találhatók.
+
+---
+
+# További megvalósított extra elemek
+
+- globális UI komponensek létrehozása (Modal, ConfirmDialog, ToastProvider)  
+- egységes gomb- és ikonrendszer mindkét modulban  
+- globális szín- és designrendszer (CSS változók alapján)  
+- buszlista reszponzív táblázatból mobilbarát kártyanézet  
+- részletes űrlapvalidáció és input-normalizáció (regex, clamp, karaktertisztítás)  
+- touch–desktop differenciált működés a boardon  
+- inline cím szerkesztése feladatkártyákon  
+- státuszszínezés és vizuális dropzone kiemelés  
+- egységes toast visszajelzések minden fontos műveletnél  
+
+---
+
+# Mappastruktúra
+
+
+
+
+src
+├── component
+│   ├── navbar
+│   │   ├── data
+│   │   │   └── menuItems.data.ts      
+│   │   ├── style
+│   │   │   └── navbar.style.ts        
+│   │   └── Navbar.tsx                 
+│   │
+│   └── ui                             # Globális UI elemek
+│       ├── modal
+│       │   ├── ConfirmDialog.tsx      # Törlés/megerősítés dialógus (Modalra építve)
+│       │   ├── ConfirmDialog.css      # ConfirmDialog gombstílusok (cancel/confirm)
+│       │   ├── Modal.css              # Modal vizuális stílusai
+│       │   └── Modal.tsx              # Általános modális ablak komponens
+│       │
+│       └── toast
+│           └── ToastProvider.tsx      # Globális toast értesítések (React context)
+│
+├── config
+│   ├── axios.config.ts               
+│   ├── queryClient.config.ts          
+│   ├── routes.ts                      
+│   └── useDocumentTitle.ts            # Custom hook a document.title beállításához
+│
+├── page
+│   │
+│   ├── task                           # A feladat eredeti leírása (kapott anyag)
+│   │ 
+│   ├── board
+│   │   ├── data
+│   │   │   └── board.data.ts          # Board oszlopok metaadatai (id, cím)
+│   │   ├── style
+│   │   │   ├── board.classes.css      # Board kártyák, státusz-színek, dropzone stílusok
+│   │   │   ├── board.style.ts         # Board layout és oszlopok stílusa
+│   │   │   └── boardButtons.style.ts  # Board gomb- és ikonstílusok
+│   │   ├── board.api.ts               # Board API hívások (/tasks endpoint)
+│   │   ├── board.hooks.ts             # React Query hookok board műveletekhez
+│   │   ├── board.types.ts             # Board típusdefiníciók (Task, TaskStatus)
+│   │   ├── BoardColumn.tsx            # Oszlop komponens (todo / in_progress / done)
+│   │   ├── BoardPage.tsx              # Teljes board oldal + drag & drop logika
+│   │   ├── StatusSelect.tsx           # Mobil státuszváltás modálban
+│   │   ├── TaskCard.tsx               # Feladatkártya (drag, edit, delete)
+│   │   └── TaskCreateForm.tsx         # Új feladat létrehozása oszlopban
+│   │
+│   └── bus
+│       ├── data
+│       │   └── bus.data.ts            # Busz oldal címei, rövid leírás
+│       ├── style
+│       │   ├── css
+│       │   │   └── bus.classes.css    # Busz státusz pill, űrlap layout, plate inputok
+│       │   ├── bus.style.ts           # Listaoldal stílusa és táblázat megjelenése
+│       │   ├── busButtons.style.ts    # Busz modul gomb- és ikonstílusok
+│       │   ├── busDetail.style.ts     # Busz részletező oldal stílusa
+│       │   └── busEdit.style.ts       # Busz szerkesztő nézet stílusa
+│       ├── utils
+│       │   └── busForm.utils.ts       # Űrlap validáció, regexek, alapértékek
+│       ├── bus.api.ts                 # Busz API hívások (/buses endpoint)
+│       ├── bus.hooks.ts               # React Query hookok busz adatokhoz
+│       ├── bus.types.ts               # Busz típusdefiníciók (Bus, BusStatus)
+│       ├── BusCreateModal.tsx         # Új busz felvétele modál űrlappal
+│       ├── BusDetail.tsx              # Busz részletező oldal
+│       ├── BusEdit.tsx                # Busz adatainak szerkesztése validációval
+│       └── BusList.tsx                # Buszok listázása táblázatban
+│                      
+│
+├── App.tsx                            # Router és oldalak regisztrálása
+├── index.css                          # Globális stílusok és CSS változók
+└── main.tsx                           # Belépési pont (QueryClient, ToastProvider, App)
