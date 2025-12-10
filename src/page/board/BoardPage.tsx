@@ -5,7 +5,7 @@ import {
   useBoardTasksQuery,
   useDeleteBoardTaskMutation,
   useUpdateTaskStatusMutation,
-  useUpdateBoardTaskMutation,    // ⬅ ÚJ
+  useUpdateBoardTaskMutation,    
 } from "./board.hooks";
 import { BOARD_COLUMNS } from "./data/board.data";
 import type { BoardTask, TaskStatus } from "./board.types";
@@ -35,7 +35,7 @@ const BoardPage: React.FC = () => {
 
   const { data: tasks, isLoading, isError } = useBoardTasksQuery();
   const updateStatusMutation = useUpdateTaskStatusMutation();
-  const updateTaskMutation = useUpdateBoardTaskMutation();   // ⬅ ÚJ
+  const updateTaskMutation = useUpdateBoardTaskMutation();  
   const deleteTaskMutation = useDeleteBoardTaskMutation();
 
   const [draggedTaskId, setDraggedTaskId] = useState<number | null>(null);
@@ -183,7 +183,7 @@ const BoardPage: React.FC = () => {
                 onTaskDragStart={setDraggedTaskId}
                 onTaskDragEnd={() => setDraggedTaskId(null)}
                 onTaskClick={handleTaskClick}
-                onTaskEdit={handleTaskTitleEdit}   // ⬅ ÚJ PROP
+                onTaskEdit={handleTaskTitleEdit} 
               />
             ))}
           </ColumnsWrapper>

@@ -94,7 +94,7 @@ export const BoardDeleteIconButton = styled(BoardIconButtonBase)({
 });
 
 /* ==========================================================================
-   SZERKESZTÉS IKON – semleges
+   SZERKESZTÉS IKON 
    ========================================================================== */
 
 export const BoardEditIconButton = styled(BoardIconButtonBase)({

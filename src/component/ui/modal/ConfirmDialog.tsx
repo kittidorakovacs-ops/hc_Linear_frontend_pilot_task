@@ -1,6 +1,6 @@
-// src/component/ui/modal/ConfirmDialog.tsx
 import React from "react";
 import Modal from "./Modal";
+import "./ConfirmDialog.css";
 
 type ConfirmDialogProps = {
   open: boolean;
@@ -26,35 +26,11 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       <p style={{ marginBottom: 16 }}>{message}</p>
 
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-        <button
-          type="button"
-          className="hcl-btn"
-          onClick={onCancel}
-          style={{
-            padding: "6px 12px",
-            fontSize: "0.85rem",
-            background: "var(--button-background-color-grey)",
-            border: "none",
-            borderRadius: "8px",
-            color: "var(--text-color-dark)",
-          }}
-        >
+        <button type="button" className="hcl-btn-cancel" onClick={onCancel}>
           {cancelLabel}
         </button>
 
-        <button
-          type="button"
-          className="hcl-btn"
-          onClick={onConfirm}
-          style={{
-            padding: "6px 12px",
-            fontSize: "0.85rem",
-            background: "var(--cancel-delete-button-color)",
-            border: "none",
-            borderRadius: "8px",
-            color: "#ffffff",
-          }}
-        >
+        <button type="button" className="hcl-btn-confirm" onClick={onConfirm}>
           {confirmLabel}
         </button>
       </div>

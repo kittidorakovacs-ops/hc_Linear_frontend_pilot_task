@@ -26,7 +26,7 @@ type BoardColumnProps = {
   onTaskDragStart: (taskId: number) => void;
   onTaskDragEnd: () => void;
   onTaskClick: (task: BoardTask) => void;
-  onTaskEdit: (taskId: number, newTitle: string) => void; // ⬅️ ÚJ
+  onTaskEdit: (taskId: number, newTitle: string) => void;
 };
 
 export const BoardColumn: React.FC<BoardColumnProps> = ({
@@ -73,7 +73,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             key={task.id}
             task={task}
             onDelete={() => onTaskDelete(task.id)}
-            onEdit={(newTitle) => onTaskEdit(task.id, newTitle)} // ⬅️ EDIT TITLE
+            onEdit={(newTitle) => onTaskEdit(task.id, newTitle)} 
             onDragStart={() => onTaskDragStart(task.id)}
             onDragEnd={onTaskDragEnd}
             onClick={() => onTaskClick(task)}

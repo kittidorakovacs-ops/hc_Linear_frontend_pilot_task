@@ -42,12 +42,10 @@ export function BusList() {
     setIsCreateOpen(false);
   };
 
-  // csak a megerősítő modal megnyitása
   const handleDeleteRequest = (bus: Bus) => {
     setBusToDelete(bus);
   };
 
-  // tényleges törlés a ConfirmDialog "Igen, törlöm" gombjára
   const handleConfirmDelete = () => {
     if (!busToDelete) return;
 
@@ -119,9 +117,10 @@ export function BusList() {
                 {data?.map((bus) => (
                   <tr key={bus.id}>
                     <td data-label="ID">{bus.id}</td>
-                    <S.ModelCell data-label="Modell" title={bus.model}>
-                      {bus.model}
-                    </S.ModelCell>
+                <S.ModelCell data-label="Modell" title={bus.model}>
+                  <span className="bus-cell-value">{bus.model}</span>
+                </S.ModelCell>
+
 
                     {/* RENDSZÁM – KÖZÉPRE */}
                     <td data-label="Rendszám" className="bus-cell-center">

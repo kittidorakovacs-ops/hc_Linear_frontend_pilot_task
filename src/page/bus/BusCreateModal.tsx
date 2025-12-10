@@ -13,7 +13,7 @@ import {
   PLATE_NUMBER_REGEX,
   MODEL_ALLOWED_REGEX,
   validateBusForm,
-} from "./untils/busForm.utils";
+} from "./utils/busForm.utils";
 
 import { BusPrimarySmallButton } from "./style/busButtons.style";
 

@@ -24,7 +24,7 @@ import {
   PLATE_PREFIX_REGEX,
   PLATE_NUMBER_REGEX,
   MODEL_ALLOWED_REGEX,
-} from "./untils/busForm.utils";
+} from "./utils/busForm.utils";
 
 import "./style/css/bus.classes.css";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";

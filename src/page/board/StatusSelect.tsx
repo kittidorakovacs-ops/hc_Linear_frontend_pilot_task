@@ -42,28 +42,14 @@ const StatusSelect: React.FC<StatusSelectProps> = ({
       </select>
 
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
-        <button
-          type="button"
-          className="hcl-btn"
-          style={{
-            background: "var(--button-background-color-grey)",
-            color: "var(--text-color-dark)",
-          }}
-          onClick={onCancel}
-        >
+          <button type="button" className="hcl-btn-cancel" onClick={onCancel}>
           Mégse
         </button>
-        <button
-          type="button"
-          className="hcl-btn"
-          style={{
-            background: "var(--primary-color)",
-            color: "var(--text-color-dark)",
-          }}
-          onClick={() => onSave(value)}
-        >
+
+        <button type="button" className="hcl-btn-confirm" onClick={() => onSave(value)}>
           Mentés
         </button>
+
       </div>
     </div>
   );

@@ -48,10 +48,6 @@ export const CardTitle = styled(Typography)({
   color: "var(--primary-color)",
 });
 
-export const BackButtonRow = styled(Box)({
-  marginBottom: "16px",
-});
-
 export const CardHeader = styled(Box)({
   display: "flex",
   justifyContent: "space-between",

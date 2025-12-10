@@ -23,7 +23,7 @@ export const createBoardTask = async (payload: {
 
 export const updateBoardTask = async (
   id: number,
-  payload: Partial<Pick<BoardTask, "title" | "description" | "status" | "order">>
+  payload: Partial<Pick<BoardTask, "title" | "description" | "status">>
 ): Promise<BoardTask> => {
   const { data } = await boardAxiosClient.patch<BoardTask>(
     `${BASE_PATH}/${id}`,

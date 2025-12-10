@@ -153,6 +153,11 @@ export const Table = styled("table")({
       fontSize: "0.9rem",
     },
 
+      "& tbody tr td .bus-cell-value": {
+        marginLeft: "auto",
+        textAlign: "right",
+      },
+
     "& tbody tr td::before": {
       content: "attr(data-label)",
       fontSize: "0.75rem",
@@ -176,7 +181,7 @@ export const ModelCell = styled("td")({
   overflow: "hidden",
   textOverflow: "ellipsis",
 
-  "@media (maxWidth: 1024px)": {
+  "@media (max-width: 1024px)": {
     maxWidth: "100%",
     whiteSpace: "normal",
     overflow: "visible",

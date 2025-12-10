@@ -48,7 +48,6 @@ export const useUpdateTaskStatusMutation = () => {
   });
 };
 
-// ⬇⬇⬇ ÚJ: általános update (title / description / status)
 export const useUpdateBoardTaskMutation = () => {
   const queryClient = useQueryClient();
 
